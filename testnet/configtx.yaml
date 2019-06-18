@@ -1,49 +1,58 @@
 Organizations:
     - &OrdererOrg0
-        Name: OrdererOrg0MSP
-        ID: OrdererOrg0MSP
+        Name: OrdererOrg0
+        ID: ordererorg0
         MSPDir: crypto-config/ordererOrganizations/ordererorg0/msp/
         Policies: &OrdererOrg0Policies
             Readers:
                 Type: Signature
-                Rule: "OR('OrdererOrg0MSP.member')"
+                Rule: "OR('ordererorg0.admin', 'ordererorg0.member')"
             Writers:
                 Type: Signature
-                Rule: "OR('OrdererOrg0MSP.member')"
+                Rule: "OR('ordererorg0.admin', 'ordererorg0.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('OrdererOrg0MSP.admin')"
+                Rule: "OR('ordererorg0.admin')"
+            Endorsrement:
+                Type: Signature
+                Rule: "OR('ordererorg0.member')"
     - &Org0
-        Name: Org0MSP
-        ID: Org0MSP
+        Name: Org0
+        ID: org0
         MSPDir: crypto-config/peerOrganizations/org0/msp/
         Policies: &Org0Policies
             Readers:
                 Type: Signature
-                Rule: "OR('Org0MSP.member')"
+                Rule: "OR('org0.admin', 'org0.member')"
             Writers:
                 Type: Signature
-                Rule: "OR('Org0MSP.member')"
+                Rule: "OR('org0.admin', 'org0.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('Org0MSP.admin')"
+                Rule: "OR('org0.admin')"
+            Endorsrement:
+                Type: Signature
+                Rule: "OR('org0.admin', 'org0.member')"
         AnchorPeers:
             - Host: peer0
               Port: 7051
     - &Org1
-        Name: Org1MSP
-        ID: Org1MSP
+        Name: Org1
+        ID: org1
         MSPDir: crypto-config/peerOrganizations/org1/msp/
         Policies: &Org1Policies
             Readers:
                 Type: Signature
-                Rule: "OR('Org1MSP.member')"
+                Rule: "OR('org1.admin', 'org1.member')"
             Writers:
                 Type: Signature
-                Rule: "OR('Org1MSP.member')"
+                Rule: "OR('org1.admin', 'org1.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('Org1MSP.admin')"
+                Rule: "OR('org1.admin')"
+            Endorsrement:
+                Type: Signature
+                Rule: "OR('org1.admin', 'org1.member')"
         AnchorPeers:
             - Host: peer2
               Port: 7051
@@ -180,6 +189,8 @@ Profiles:
             <<: *OrdererDefaults
             Organizations:
                 - *OrdererOrg0
+            Capabilities:
+                <<: *OrdererCapabilities
         Consortiums:
             SampleConsortium:
                 Organizations:

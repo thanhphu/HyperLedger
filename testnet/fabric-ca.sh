@@ -11,6 +11,8 @@ fabric-ca-client enroll -u http://admin:adminpw@fabric-ca:7054
 fabric-ca-client affiliation remove --force org1
 fabric-ca-client affiliation remove --force org2
 
+fabric-ca-client affiliation remove --force org1.department1
+
 fabric-ca-client affiliation add org0
 fabric-ca-client affiliation add org1
 fabric-ca-client affiliation add ordererorg0
@@ -148,11 +150,13 @@ scp Admin@org1-cert.pem admin-ordererorg0:~/testnet/crypto-config/peerOrganizati
 cp ordererOrganizations/ordererorg0/msp/cacerts/192-168-0-12-7054.pem peerOrganizations/org0/msp/cacerts/ca.crt
 cp ordererOrganizations/ordererorg0/msp/cacerts/192-168-0-12-7054.pem peerOrganizations/org1/msp/cacerts/ca.crt
 ----
-
 configtxgen -profile TwoOrgsOrdererGenesis -outputBlock genesis.block -channelID defaultchannel
 
 ----
 configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ch1.tx -channelID ch1
+
+configtxgen -profile TwoOrgsChannel -outputCreateChannelTx fuckingchannel.tx -channelID fuckingchannel
+configtxgen -profile TwoOrgsOrdererGenesis -outputCreateChannelTx ch1.tx -channelID ch1
 
 mkdir -p ~/testnet/crypto-config/ordererOrganizations/ordererorg0/orderers/orderer0.ordererorg0/
 cp genesis.block ~/testnet/crypto-config/ordererOrganizations/ordererorg0/orderers/orderer0.ordererorg0/
@@ -176,3 +180,17 @@ scp genesis.block orderer0:~/testnet/ &
 scp admin-ordererorg0:~/testnet/ch1.tx .
 scp ch1.tx admin-org0:~/testnet/ &
 scp ch1.tx admin-org1:~/testnet/ &
+
+scp admin-ordererorg0:~/testnet/fuckingchannel.tx .
+scp fuckingchannel.tx admin-org0:~/testnet/ &
+scp fuckingchannel.tx admin-org1:~/testnet/ &
+
+
+ssh-copy-id -i ~/.ssh/id_rsa peer2
+ssh-copy-id -i ~/.ssh/id_rsa peer3
+ssh-copy-id -i ~/.ssh/id_rsa orderer0
+ssh-copy-id -i ~/.ssh/id_rsa kafka
+ssh-copy-id -i ~/.ssh/id_rsa fabric-ca
+ssh-copy-id -i ~/.ssh/id_rsa admin-org0
+ssh-copy-id -i ~/.ssh/id_rsa admin-org0
+ssh-copy-id -i ~/.ssh/id_rsa admin-ordererorg0
