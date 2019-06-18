@@ -1,6 +1,6 @@
 Organizations:
     - &OrdererOrg0
-        Name: OrdererOrg0
+        Name: OrdererOrg0MSP
         ID: OrdererOrg0MSP
         MSPDir: crypto-config/ordererOrganizations/ordererorg0/msp/
         Policies: &OrdererOrg0Policies
@@ -14,7 +14,7 @@ Organizations:
                 Type: Signature
                 Rule: "OR('OrdererOrg0MSP.admin')"
     - &Org0
-        Name: Org0
+        Name: Org0MSP
         ID: Org0MSP
         MSPDir: crypto-config/peerOrganizations/org0/msp/
         Policies: &Org0Policies
@@ -28,10 +28,10 @@ Organizations:
                 Type: Signature
                 Rule: "OR('Org0MSP.admin')"
         AnchorPeers:
-            - Host: 192.168.0.7
+            - Host: peer0
               Port: 7051
     - &Org1
-        Name: Org1
+        Name: Org1MSP
         ID: Org1MSP
         MSPDir: crypto-config/peerOrganizations/org1/msp/
         Policies: &Org1Policies
@@ -45,7 +45,7 @@ Organizations:
                 Type: Signature
                 Rule: "OR('Org1MSP.admin')"
         AnchorPeers:
-            - Host: 192.168.0.8
+            - Host: peer2
               Port: 7051
 
 Capabilities:
@@ -110,7 +110,7 @@ Application: &ApplicationDefaults
 Orderer: &OrdererDefaults
     OrdererType: kafka
     Addresses:
-        - 192.168.0.13:7050
+        - orderer0:7050
     BatchTimeout: 1s
     BatchSize:
         MaxMessageCount: 30
@@ -118,7 +118,7 @@ Orderer: &OrdererDefaults
         PreferredMaxBytes: 512 KB
     Kafka:
         Brokers:
-            - 192.168.0.11:9092
+            - kafka:9092
     Organizations:
     Policies:
         Readers:
@@ -179,60 +179,12 @@ Profiles:
         Orderer:
             <<: *OrdererDefaults
             Organizations:
-                - <<: *OrdererOrg0
-                  Policies:
-                    <<: *OrdererOrg0Policies
-                    Admins:
-                        Type: Signature
-                        Rule: "OR('OrdererOrg0MSP.member')"
-                - <<: *Org0
-                  Policies:
-                    <<: *Org0Policies
-                    Admins:
-                        Type: Signature
-                        Rule: "OR('Org0MSP.member')"
-                - <<: *Org1
-                  Policies:
-                    <<: *Org1Policies
-                    Admins:
-                        Type: Signature
-                        Rule: "OR('Org1MSP.member')"
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
-                - <<: *OrdererOrg0
-                  Policies:
-                      <<: *OrdererOrg0Policies
-                      Admins:
-                          Type: Signature
-                          Rule: "OR('OrdererOrg0MSP.member')"
-                - <<: *Org0
-                  Policies:
-                    <<: *Org0Policies
-                    Admins:
-                        Type: Signature
-                        Rule: "OR('Org0MSP.member')"
-                - <<: *Org1
-                  Policies:
-                    <<: *Org1Policies
-                    Admins:
-                        Type: Signature
-                        Rule: "OR('Org1MSP.member')"
+                - *OrdererOrg0
         Consortiums:
             SampleConsortium:
                 Organizations:
-                    - <<: *Org0
-                      Policies:
-                          <<: *Org0Policies
-                          Admins:
-                              Type: Signature
-                              Rule: "OR('Org0MSP.member')"
-                    - <<: *Org1
-                      Policies:
-                          <<: *Org1Policies
-                          Admins:
-                              Type: Signature
-                              Rule: "OR('Org1MSP.member')"
+                    - *Org0
+                    - *Org1
 
     TwoOrgsChannel:
         <<: *ChannelDefaults
@@ -240,15 +192,5 @@ Profiles:
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - <<: *Org0
-                  Policies:
-                          <<: *Org0Policies
-                          Admins:
-                              Type: Signature
-                              Rule: "OR('Org0MSP.member')"
-                - <<: *Org1
-                  Policies:
-                          <<: *Org1Policies
-                          Admins:
-                              Type: Signature
-                              Rule: "OR('Org1MSP.member')"
+                - *Org0
+                - *Org1

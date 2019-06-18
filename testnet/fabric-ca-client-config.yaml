@@ -40,7 +40,7 @@
 #############################################################################
 
 # URL of the Fabric-ca-server (default: http://localhost:7054)
-url: http://192.168.0.12:7054
+url: http://fabric-ca:7054
 
 # Membership Service Provider (MSP) directory
 # This is useful when the client is used to enroll a peer or orderer, so
@@ -99,14 +99,14 @@ tls:
 #
 #############################################################################
 csr:
-  cn: Admin@ordererorg0
+  cn: admin
   keyrequest:
     algo: ecdsa
     size: 256
   serialnumber:
   names:
-    - C: US
-      ST: North Carolina
+    - C: KR
+      ST: Seoul
       L:
       O: Hyperledger
       OU: Fabric
@@ -125,14 +125,28 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name: orderer0
-  type: orderer
-  affiliation: ordererorg0
+  name: Admin@org0
+  type: client
+  affiliation: org0
   maxenrollments: 0
   attributes:
-    - name: role
-      value: orderer
-      ecert: true
+   - name: hf.Registrar.Roles
+     value: client,orderer,peer,user
+   - name: hf.Registrar.DelegateRoles
+     value: client,orderer,peer,user
+   - name: hf.Registrar.Attributes
+     value: "*"
+   - name: hf.genCRL
+     value: true
+   - name: hf.Revoker
+     value: true
+   - name: hf.AffiliationMgr
+     value: true
+   - name: hf.IntermediateCA
+     value: true
+   - name: role
+     value: admin
+     ecert: true
 
 #############################################################################
 #  Enrollment section used to enroll an identity with fabric-ca server
