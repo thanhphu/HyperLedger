@@ -188,11 +188,6 @@ scp admin-ordererorg0:~/testnet/ch1.tx .
 scp ch1.tx admin-org0:~/testnet/ &
 scp ch1.tx admin-org1:~/testnet/ &
 
-scp admin-ordererorg0:~/testnet/fuckingchannel.tx .
-scp fuckingchannel.tx admin-org0:~/testnet/ &
-scp fuckingchannel.tx admin-org1:~/testnet/ &
-
-
 ssh-copy-id -i ~/.ssh/id_rsa peer2
 ssh-copy-id -i ~/.ssh/id_rsa peer3
 ssh-copy-id -i ~/.ssh/id_rsa orderer0
