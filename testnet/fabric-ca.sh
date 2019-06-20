@@ -156,15 +156,19 @@ cp ordererOrganizations/ordererorg0/msp/cacerts/192-168-0-12-7054.pem peerOrgani
 cp peerOrganizations/org1/msp/cacerts/ca.crt ordererOrganizations/ordererorg0/msp/cacerts/ca.crt
 ----
 configtxgen -profile TwoOrgsOrdererGenesis -outputBlock genesis.block -channelID defaultchannel
+configtxgen -profile TwoOrgsOrdererGenesis -outputBlock genesis.block -channelID defaultchannel && configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ch1.tx -channelID ch1
 
+
+configtxgen -inspectBlock genesis.block > genesis.json
+scp admin-ordererorg0:~/testnet/genesis.json .
 ----
 configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ch1.tx -channelID ch1
 
-configtxgen -profile TwoOrgsChannel -outputCreateChannelTx fuckingchannel.tx -channelID fuckingchannel
-configtxgen -profile TwoOrgsOrdererGenesis -outputCreateChannelTx ch1.tx -channelID ch1
+configtxgen -inspectChannelCreateTx ch1.tx > channel.json
+scp admin-ordererorg0:~/testnet/channel.json . && code channel.json
 
 mkdir -p ~/testnet/crypto-config/ordererOrganizations/ordererorg0/orderers/orderer0.ordererorg0/
-cp genesis.block ~/testnet/crypto-config/ordererOrganizations/ordererorg0/orderers/orderer0.ordererorg0/
+cp ~/testnet/genesis.block ~/testnet/crypto-config/ordererOrganizations/ordererorg0/orderers/orderer0.ordererorg0/
 
 cd crypto-config
 mkdir -p peerOrganizations/org0/peers/peer0.org0/tls
@@ -174,16 +178,14 @@ cp ordererOrganizations/ordererorg0/msp/cacerts/fabric-ca-7054.pem peerOrganizat
 cp ordererOrganizations/ordererorg0/orderers/orderer0.ordererorg0/msp/cacerts/fabric-ca-7054.pem ordererOrganizations/ordererorg0/orderers/orderer0.ordererorg0/msp/cacerts/ca.crt
 rsync -a ~/testnet/crypto-config/ordererOrganizations/ordererorg0/users/Admin@ordererorg0/msp/ ~/testnet/crypto-config/ordererOrganizations/ordererorg0/orderers/orderer0.ordererorg0/msp/
 
-
-scp
 ----
 
 peer channel join -b genesis.block
 ----
 
-
 scp admin-ordererorg0:~/testnet/genesis.block .
 scp genesis.block orderer0:~/testnet/ &
+scp genesis.block orderer0:~/testnet/crypto-config/ordererOrganizations/ordererorg0/orderers/orderer0.ordererorg0/ &
 scp admin-ordererorg0:~/testnet/ch1.tx .
 scp ch1.tx admin-org0:~/testnet/ &
 scp ch1.tx admin-org1:~/testnet/ &
@@ -196,3 +198,14 @@ ssh-copy-id -i ~/.ssh/id_rsa fabric-ca
 ssh-copy-id -i ~/.ssh/id_rsa admin-org0
 ssh-copy-id -i ~/.ssh/id_rsa admin-org0
 ssh-copy-id -i ~/.ssh/id_rsa admin-ordererorg0
+
+---
+
+configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate Org0MSPanchors.tx -channelID ch1 -asOrg Org0MSP
+configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate Org1MSPanchors.tx -channelID ch1 -asOrg Org1MSP
+
+scp admin-ordererorg0:~/testnet/Org0MSPanchors.tx . &
+scp admin-ordererorg0:~/testnet/Org1MSPanchors.tx .
+
+scp Org0MSPanchors.tx admin-org0:~/testnet/ &
+scp Org1MSPanchors.tx admin-org1:~/testnet/

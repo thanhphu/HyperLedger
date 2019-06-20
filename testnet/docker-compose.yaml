@@ -1,13 +1,13 @@
-version: '2'
+version: '3'
 services:
 
-    zookeeper0:
+    zookeeper:
         image: hyperledger/fabric-zookeeper
         environment:
             - ZOO_MY_ID=1
-            - ZOO_SERVERS=server.1=zookeeper0:2888:3888
+            - ZOO_SERVERS=server.1=zookeeper:2888:3888
 
-    kafka0:
+    kafka:
         image: hyperledger/fabric-kafka
         environment:
             - KAFKA_ADVERTISED_HOST_NAME=kafka
@@ -18,11 +18,11 @@ services:
             - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
             - KAFKA_NUM_REPLICA_FETCHERS=1
             - KAFKA_DEFAULT_REPLICATION_FACTOR=1
-            - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181
+            - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
         ports:
             - "9092:9092"
         depends_on:
-            - zookeeper0
+            - zookeeper
 
 # 172.28.0.2 fa4b2b9d4e49 zookeeper0
 # 172.28.0.3 1c7a59b7f8fd kafka0

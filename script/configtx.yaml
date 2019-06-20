@@ -5,14 +5,14 @@ Organizations:
         MSPDir: crypto-config/ordererOrganizations/ordererorg0/msp/
 
     - &Org0
-        Name: Org0MSP
+        Name: Org0
         ID: Org0MSP
         MSPDir: crypto-config/peerOrganizations/org0/msp/
         AnchorPeers:
             - Host: peer0
               Port: 7051
     - &Org1
-        Name: Org1MSP
+        Name: Org1
         ID: Org1MSP
         MSPDir: crypto-config/peerOrganizations/org1/msp/
         AnchorPeers:

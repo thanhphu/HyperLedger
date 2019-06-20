@@ -1,5 +1,0 @@
-export CORE_PEER_LOCALMSPID="Org0MSP"
-export CORE_PEER_MSPCONFIGPATH=~/testnet/crypto-config/peerOrganizations/org0/users/Admin@org0/msp
-export CORE_PEER_ADDRESS=peer1:7051
-peer channel join -b ch1.block
-
