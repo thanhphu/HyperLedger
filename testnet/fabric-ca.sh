@@ -190,6 +190,9 @@ scp admin-ordererorg0:~/testnet/ch1.tx .
 scp ch1.tx admin-org0:~/testnet/ &
 scp ch1.tx admin-org1:~/testnet/ &
 
+scp admin-org0:~/testnet/ch1.block .
+scp ch1.block admin-org1:~/testnet/ch1.block
+
 ssh-copy-id -i ~/.ssh/id_rsa peer2
 ssh-copy-id -i ~/.ssh/id_rsa peer3
 ssh-copy-id -i ~/.ssh/id_rsa orderer0
